@@ -1,0 +1,43 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  width: 300px;
+  margin: 0 auto;
+  padding-top: 100px;
+  font-size: 0;
+}
+
+
+/**
+ * The box.
+ */
+
+.row {
+  display: flex;
+}
+
+[class^="box"] {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border: 1px solid black;
+  background-origin: content-box;
+  cursor: pointer;
+  text-align: center;
+  font-size: 30px;
+  transition: all 0.15s;
+}
+
+[class^="box"]:hover,
+[class^="box"].is-active {
+  background-color: hotpink;
+  color: white;
+}

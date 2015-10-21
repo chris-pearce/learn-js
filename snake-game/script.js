@@ -5,6 +5,10 @@ var SnakeGame = {
     this.drawGrid();
   },
 
+  coordinates: function() {
+
+  },
+
   // Draw the grid
   drawGrid: function() {
     var container = $('.container');
