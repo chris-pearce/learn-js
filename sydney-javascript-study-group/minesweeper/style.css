@@ -1,3 +1,7 @@
+/**
+ * Base styles.
+ */
+
 html {
   box-sizing: border-box;
 }
@@ -8,24 +12,55 @@ html {
   box-sizing: inherit;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 html {
-  width: 180px;
-  margin: 0 auto;
-  margin-top: 100px;
-  font-size: 0;
-  border: 1px solid black;
+  padding: 100px;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+h1 {
+  color: crimson;
+  font-size: 2.3em;
+  font-weight: 400;
+  margin: 0 0 1.5em;
 }
 
 
 /**
- * The box.
+ * The game area.
  */
 
-.row {
-  display: flex;
+.game {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 600px;
+  text-align: center;
+  width: 90%;
 }
 
-[class^="box"] {
+
+/**
+ * The board.
+ */
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: auto;
+  margin-right: auto;
+  width: 180px;
+}
+
+.board__item {
   width: 20px;
   height: 20px;
   line-height: 20px;
@@ -33,15 +68,15 @@ html {
   border-left-color: gray;
   border-right-color: lightgray;
   border-bottom-color: whitesmoke;
-  background-origin: content-box;
+  background-originx: content-box;
   cursor: pointer;
   text-align: center;
   font-size: 30px;
   transition: all 0.15s;
 }
 
-[class^="box"]:hover,
-[class^="box"].is-active {
-  background-color: hotpink;
+.board__item:hover,
+.board__item.is-active {
+  background-color: crimson;
   color: white;
 }
