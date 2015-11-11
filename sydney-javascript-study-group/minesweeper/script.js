@@ -53,44 +53,87 @@
 (function(){
   var MineSweeper = {
 
-    TURN: 1,
+    // Consts
     BOARD_SIZE: {
-      rows: 9,
-      cols: 9
+      rows: 9, // Y
+      cols: 9  // X
     },
     BOARD_MAP: [],
-    DIRECTIONS: {
-      north:      [-1, 0],
-      south:      [1, 0],
-      east:       [0, 1],
-      west:       [0, -1],
-      northwest:  [-1, -1],
-      northeast:  [-1, 1],
-      southeast:  [1, 1],
-      southwest:  [1, -1],
-    },
+    MINE_MAP: [],
+    MINE_COUNT: 10,
+    MINE: "*",
+    FLAG: "/",
 
     // Draw the board as markup
     drawTheBoard: function drawTheBoard() {
-      var container = document.querySelector('.game__container');
-      var list = document.createElement('ol');
-      list.classList.add('board');
-      var cells = this.BOARD_SIZE.rows * this.BOARD_SIZE.cols;
 
-      for (var i = 0; i < cells; i++) {
-        this.BOARD_MAP.push(" ");
-        var listItem = document.createElement('li');
-        listItem.classList.add('board__item');
-        list.appendChild(listItem);
+      // Find the board container
+      var container = document.querySelector('.board');
+
+      // Number of board rows and cols
+      var rows = this.BOARD_SIZE.rows;
+      var cols = this.BOARD_SIZE.cols;
+
+      // Row loop
+      for (var i = 0; i < rows; i++) {
+
+        // Construct the row HTML
+        var row = document.createElement('div');
+        row.setAttribute('id', i);
+        row.classList.add('board__row');
+
+        // Cell array
+        var cellMap = [];
+
+        // Cell loop
+        for (var j = 0; j < cols; j++) {
+
+          // Construct the cell HTML
+          var cell = document.createElement('button');
+          cell.setAttribute('id', (i + "-" + j));
+          cell.classList.add('board__cell');
+
+          // Insert the cell into the row
+          row.appendChild(cell);
+
+          // Add cell count to cell array
+          cellMap.push("");
+        }
+
+        MineSweeper.BOARD_MAP.push(cellMap);
+        container.appendChild(row);
       }
 
-      container.appendChild(list);
-      console.log(this.BOARD_MAP);
+      console.log(MineSweeper.BOARD_MAP);
+    },
+
+    // Build mines
+    buildMines: function buildMines() {
+      var count = MineSweeper.MINE_COUNT - MineSweeper.MINE_MAP.length;
+
+      // Make sure we don't exceed number of mines
+      if (count > 0) {
+
+        for (var i = 0; i < count; i++) {
+          var randomX = Math.round(Math.random() * (MineSweeper.BOARD_SIZE.cols - 1));
+          var randomY = Math.round(Math.random() * (MineSweeper.BOARD_SIZE.rows - 1));
+          MineSweeper.BOARD_MAP[randomX][randomY] = MineSweeper.MINE;
+          MineSweeper.MINE_MAP.push("#" + randomX + "-" + randomY);
+        }
+
+        MineSweeper.MINE_MAP = _.uniq(MineSweeper.MINE_MAP);
+        MineSweeper.buildMines();
+        console.log(MineSweeper.MINE_MAP);
+
+        var elem = document.querySelector(MineSweeper.MINE_MAP[0]);
+        elem.innerHTML = "X";
+      }
     },
 
     // Initialise
     init: function() {
       this.drawTheBoard();
+      this.buildMines();
     }
   };
 

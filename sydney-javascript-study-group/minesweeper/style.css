@@ -19,7 +19,8 @@ html {
 }
 
 html {
-  padding: 100px;
+  padding: 50px 10%;
+  text-align: center;
 }
 
 ol,
@@ -36,47 +37,26 @@ h1 {
 
 
 /**
- * The game area.
+ * A board cell `button`.
  */
 
-.game {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 600px;
-  text-align: center;
-  width: 90%;
-}
-
-
-/**
- * The board.
- */
-
-.board {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: auto;
-  margin-right: auto;
-  width: 180px;
-}
-
-.board__item {
+.board__cell {
   width: 20px;
   height: 20px;
   line-height: 20px;
+  background-color: #eee;
   border: 2px inset silver;
   border-left-color: gray;
   border-right-color: lightgray;
   border-bottom-color: whitesmoke;
-  background-originx: content-box;
   cursor: pointer;
   text-align: center;
   font-size: 30px;
   transition: all 0.15s;
 }
 
-.board__item:hover,
-.board__item.is-active {
+.board__cell:hover,
+.board__cell.is-active {
   background-color: crimson;
   color: white;
 }
