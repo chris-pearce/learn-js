@@ -5,6 +5,7 @@
  *
  * http://eloquentjavascript.net/03_functions.html#h_XTmO7z7MPq
  */
+
 'use strict';
 
 (function() {

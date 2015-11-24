@@ -15,18 +15,23 @@
  *
  * http://eloquentjavascript.net/03_functions.html#h_TcUD2vzyMe
  */
+
 'use strict';
 
 (function() {
 
     var isEven = function (val) {
-        if (val % 2 === 0) {
+        if (val === 0) {
             return true;
-        } else {
+        } else if (val === 1) {
             return false;
+        } else if (val < 0) {
+            return isEven(-val);
+        } else {
+            return isEven(val - 2);
         }
     };
 
-    console.log(isEven(90));
+    console.log(isEven(-13));
 
 })();
