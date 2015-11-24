@@ -90,7 +90,7 @@
 
           // Construct the cell HTML
           var cell = document.createElement('button');
-          cell.setAttribute('id', (i + "-" + j));
+          cell.setAttribute('id', ("cell-" + i + "-" + j));
           cell.classList.add('board__cell');
 
           // Insert the cell into the row
@@ -118,7 +118,7 @@
           var randomX = Math.round(Math.random() * (MineSweeper.BOARD_SIZE.cols - 1));
           var randomY = Math.round(Math.random() * (MineSweeper.BOARD_SIZE.rows - 1));
           MineSweeper.BOARD_MAP[randomX][randomY] = MineSweeper.MINE;
-          MineSweeper.MINE_MAP.push("#" + randomX + "-" + randomY);
+          MineSweeper.MINE_MAP.push("#cell-" + randomX + "-" + randomY);
         }
 
         MineSweeper.MINE_MAP = _.uniq(MineSweeper.MINE_MAP);
@@ -126,7 +126,7 @@
         console.log(MineSweeper.MINE_MAP);
 
         var elem = document.querySelector(MineSweeper.MINE_MAP[0]);
-        elem.innerHTML = "X";
+        elem.innerHTML = MineSweeper.MINE;
       }
     },
 
