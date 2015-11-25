@@ -58,11 +58,11 @@
       rows: 9, // Y
       cols: 9  // X
     },
-    BOARD_MAP: [],
-    MINE_MAP: [],
+    BOARD_MAP:  [],
+    MINE_MAP:   [],
     MINE_COUNT: 10,
-    MINE: "*",
-    FLAG: "/",
+    MINE:       "*",
+    FLAG:       "/",
 
     // Draw the board as markup
     drawTheBoard: function drawTheBoard() {
@@ -90,7 +90,7 @@
 
           // Construct the cell HTML
           var cell = document.createElement('button');
-          cell.setAttribute('id', ("cell-" + i + "-" + j));
+          cell.setAttribute('id', (i + "-" + j));
           cell.classList.add('board__cell');
 
           // Insert the cell into the row
@@ -118,15 +118,34 @@
           var randomX = Math.round(Math.random() * (MineSweeper.BOARD_SIZE.cols - 1));
           var randomY = Math.round(Math.random() * (MineSweeper.BOARD_SIZE.rows - 1));
           MineSweeper.BOARD_MAP[randomX][randomY] = MineSweeper.MINE;
-          MineSweeper.MINE_MAP.push("#cell-" + randomX + "-" + randomY);
+          MineSweeper.MINE_MAP.push(randomX + "-" + randomY);
         }
 
         MineSweeper.MINE_MAP = _.uniq(MineSweeper.MINE_MAP);
         MineSweeper.buildMines();
-        console.log(MineSweeper.MINE_MAP);
 
-        var elem = document.querySelector(MineSweeper.MINE_MAP[0]);
-        elem.innerHTML = MineSweeper.MINE;
+        //var elem = document.querySelector(MineSweeper.MINE_MAP[0]);
+        //elem.innerHTML = MineSweeper.MINE;
+      }
+    },
+
+    plotNumbers: function plotNumbers() {
+
+      // Extract x and y coords by getting the
+      // 1st and 3rd numbers from the string
+      var mineMap  = MineSweeper.MINE_MAP[0].split("-");
+      var mineMapY = mineMap[0];
+      var mineMapX = mineMap[1];
+      var north = mineMapY - 1;
+      var east  = mineMapX + 1;
+      var south = mineMapY + 1;
+      var west  = mineMapX - 1;
+
+      if (north >= 0) {
+        var y = north;
+        var x = east;
+        console.log(mineMap);
+        MineSweeper.BOARD_MAP[y][x] = "1";
       }
     },
 
@@ -134,6 +153,7 @@
     init: function() {
       this.drawTheBoard();
       this.buildMines();
+      this.plotNumbers();
     }
   };
 
