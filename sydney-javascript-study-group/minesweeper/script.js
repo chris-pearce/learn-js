@@ -2,21 +2,13 @@
  * Minesweeper the game
  * http://www.theodinproject.com/javascript-and-jquery/minesweeper
  *
- * Checks:
- *   Empty cell (cluster)
- *   Mine
- *   Number
- *
- * Neighbours = top / top-left / top-right
- *              left / right
- *              bottom / bottom-left / bottom-right
- *
+ * Pseudo code:
  * 1. Draw grid: UI & array.
  * 2. Randomly plot 10 mines in the grid & pre-generate numbers
  * 3. Click a cell:
  *    start timer
  *    if (is it a mine) <<<< Mine
- *      gameover
+ *      game over
  *        prevent interacting with the board
  *        stop timer
  *    else (check neighbours for mines)
@@ -36,41 +28,22 @@
  *          look one cell to the right
  *          look one cell up
  *        else
- *          gameover
+ *          game over
  *
- * [0,0][0,1][0,2][0,3][0,4][0,5][0,6][0,7][0,8]
- * [1,0][1,1][1,2][1,3][1,4][1,5][1,6][1,7][1,8]
- * [2,0][2,1][2,2][2,3][2,4][2,5][2,6][2,7][2,8]
- * [3,0][3,1][3,2][3,3][3,4][3,5][3,6][3,7][3,8]
- * [4,0][4,1][4,2][4,3][4,4][4,5][4,6][4,7][4,8]
- * [5,0][5,1][5,2][5,3][5,4][5,5][5,6][5,7][5,8]
- * [6,0][6,1][6,2][6,3][6,4][6,5][6,6][6,7][6,8]
- * [7,0][7,1][7,2][7,3][7,4][7,5][7,6][7,7][7,8]
- * [8,0][8,1][8,2][8,3][8,4][8,5][8,6][8,7][8,8]
+ * TODO:
+ * - Timer
+ * - First click can never be a mine.
+ * - UI:
+ *   - Reset button.
+ *   - Loader whilst waiting for the game to load.
+ *   - Game over state.
+ *   - 3D’afy.
  */
+
 
 'use strict';
 
 (function(){
-
-
-  /**
-   * Helper functions.
-   */
-
-  // Create Handler function
-  function createHandler(i, j, cell) {
-    return function(e) {
-      if (MineSweeper.BOARD_MAP[i][j] == MineSweeper.MINE) {
-        cell.classList.add('is-mine');
-        cell.innerHTML = MineSweeper.MINE;
-      }
-    }
-  }
-
-  function controlAnimation() {
-    var container = document.querySelector('.board');
-  }
 
 
   /**
@@ -92,6 +65,73 @@
     FLAG:       "/",
 
 
+    // Returns a cells location (X and Y coordinates) on the board by
+    // extracting it from the `button` elements `id` attribute which is
+    // applied in the `drawTheBoard()` function, you can use this to check if
+    // a mine exists in a cell
+    provideClickedCellCoords: function provideClickedCellCoords(elem) {
+      var cellCoords = elem.id.split('-');
+      var cellYCoord = cellCoords[0];
+      var cellXCoord = cellCoords[1];
+      return {
+        cellYCoord: cellYCoord,
+        cellXCoord: cellXCoord
+      };
+    },
+
+
+    // Clicking a cell in the board to check if a mine exists, if it doesn’t we
+    // hand over to the `checkNeighbouringCellsForMines()` function
+    checkClickedCellForMine: function checkClickedCellForMine() {
+      return function(event) {
+        var getCellCoords = MineSweeper.provideClickedCellCoords(event.target);
+        var mine = MineSweeper.BOARD_MAP[getCellCoords.cellYCoord][getCellCoords.cellXCoord] == MineSweeper.MINE;
+        if (mine) {
+          this.classList.add('has-mine');
+          this.innerHTML = MineSweeper.MINE;
+          MineSweeper.gameOver();
+        } else {
+          MineSweeper.checkNeighbouringCellsForMines();
+        }
+      }
+    },
+
+
+    // insertMineIntoCell: function insertMineIntoCell() {
+
+    // },
+
+
+    gameOver: function gameOver() {
+      var container = document.querySelector('.board');
+      var boardCell = document.querySelector('.board__cell');
+      //var mines = MineSweeper.BOARD_MAP[][] == MineSweeper.MINE;
+      container.classList.add('is-game-over');
+      boardCell.classList.add('is-game-over');
+      // if (mines) {
+
+      // }
+    },
+
+
+    checkNeighbouringCellsForMines: function checkNeighbouringCellsForMines() {
+
+      var getCellCoords = MineSweeper.provideClickedCellCoords(event.target);
+      var north = --getCellCoords.cellYCoord; // -1
+      var east  = ++getCellCoords.cellXCoord; // +1
+      var south = ++getCellCoords.cellYCoord; // +1
+      var west  = --getCellCoords.cellXCoord; // -1
+
+      if (north >= 0) {
+        if (MineSweeper.BOARD_MAP[north][getCellCoords.cellXCoord] == MineSweeper.MINE) {
+          this.innerHTML = "1";
+        } else {
+
+        }
+      }
+    },
+
+
     // Draw the board’s UI and create a 2d array of the board (pushed to
     // BOARD_MAP)
     drawTheBoard: function drawTheBoard() {
@@ -100,45 +140,47 @@
       var container = document.querySelector('.board');
 
       // Store the number of board rows and cols
-      var rows = this.BOARD_SIZE.rows;
-      var cols = this.BOARD_SIZE.cols;
+      var rowCount = this.BOARD_SIZE.rows;
+      var colCount = this.BOARD_SIZE.cols;
 
       // Loop through the board rows
-      for (var i = 0; i < rows; i++) {
+      for (var i = 0; i < rowCount; i++) {
 
         // Construct the board row HTML
         var row = document.createElement('div');
         row.setAttribute('id', i);
         row.classList.add('board__row');
 
-        // The board array that’ll get pushed to the BOARD_MAP array
-        var cellMap = [];
+        // The board map array that’ll get pushed to the BOARD_MAP `const` array
+        var boardMap = [];
 
         // Loop through the board cells
-        for (var j = 0; j < cols; j++) {
+        for (var j = 0; j < colCount; j++) {
 
           // Construct the board cell HTML
           var cell = document.createElement('button');
-          cell.setAttribute('id', (i + "-" + j));
+          cell.setAttribute('id', (i + '-' + j));
           cell.classList.add('board__cell');
 
           // Insert the board cell into the board row
           row.appendChild(cell);
 
-          // Add a click event listener to the board cell and pass the cells x
-          // and y coordinates and the cell itself to the `createHandler`
-          // helper function
-          cell.addEventListener('click', createHandler(i, j, cell));
+          // Add a click event listener to the board cell `button` that fires
+          // off to the `checkClickedCellForMine` function
+          cell.addEventListener('click', MineSweeper.checkClickedCellForMine());
 
-          // Push the board’s rows and cells to the `cellMap` array
-          cellMap.push("");
+          // Push the board’s rows and cells to the `boardMap` array
+          boardMap.push('');
         }
 
         // Push the board into the board map
-        MineSweeper.BOARD_MAP.push(cellMap);
+        MineSweeper.BOARD_MAP.push(boardMap);
 
         // Insert the rows into the container
         container.appendChild(row);
+
+        // Add a state hook to the board once it’s been drawn (loaded)
+        container.classList.add('has-loaded');
       }
     },
 
@@ -163,7 +205,7 @@
 
         // Using the lodash lib make sure we prevent duplicate mine coordinates
         // from occurring
-        MineSweeper.MINE_MAP = _.uniq(MineSweeper.MINE_MAP);
+        //MineSweeper.MINE_MAP = _.uniq(MineSweeper.MINE_MAP);
 
         // Keep repeating this function until we get the expected number of
         // mines
@@ -171,33 +213,11 @@
       }
     },
 
-    // Plot the numbers on the board
-    // N.B. NOT BEING USED ATM & MAY NEVER BE??
-    plotNumbers: function plotNumbers() {
-
-      // Extract x and y coords by getting the 1st and 3rd numbers from the
-      // string
-      var mineMap  = MineSweeper.MINE_MAP[0].split("-");
-      var mineMapY = mineMap[0];
-      var mineMapX = mineMap[1];
-      // Plot the adjacent neighbours
-      var north = --mineMapY;
-      var east  = ++mineMapX;
-      var south = ++mineMapY;
-      var west  = --mineMapX;
-
-      if (north >= 0) {
-        var y = north;
-        var x = east;
-        MineSweeper.BOARD_MAP[y][x] = "1";
-      }
-    },
 
     // Initialise
     init: function() {
       this.drawTheBoard();
       this.buildMines();
-      //this.plotNumbers();
     }
   };
 
@@ -205,7 +225,7 @@
   window.MineSweeper = MineSweeper;
   MineSweeper.init();
 
-  // Render the Board & Mine map arrays to the console
+  // Console.logs
   console.log("Board map:");
   console.log(MineSweeper.BOARD_MAP);
   console.log("Mine map:");
